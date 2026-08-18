@@ -17,7 +17,7 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    "https://consistency-os-weld.vercel.app",
+    "https://consistencyosx.vercel.app",
     "http://localhost:5173"
   ],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
