@@ -2,11 +2,11 @@
   "name": "career-tracker-backend",
   "version": "1.0.0",
   "description": "Backend for Career Tracker MERN app",
-  "main": "src/server.js",
+  "main": "api/server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "node api/server.js",
+    "dev": "nodemon api/server.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
