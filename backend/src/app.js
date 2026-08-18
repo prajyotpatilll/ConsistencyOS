@@ -12,7 +12,7 @@ const { notFound, errorHandler } = require("./middleware/error.middleware");
 
 const app = express();
 
-app.use(cors({
+const corsOptions = {
   origin: [
     "https://consistency-os-weld.vercel.app",
     "http://localhost:5173"
@@ -20,7 +20,10 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
