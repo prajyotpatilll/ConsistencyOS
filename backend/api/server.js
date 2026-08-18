@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
-
 const authRoutes = require("../src/routes/auth.routes");
 const taskRoutes = require("../src/routes/task.routes");
 const dsaRoutes = require("../src/routes/dsa.routes");
@@ -16,8 +15,6 @@ const connectDB = require("../src/config/db");
 
 const app = express();
 
-const PORT = process.env.PORT || 5000;
-
 const corsOptions = {
   origin: [
     "https://consistency-os-weld.vercel.app",
@@ -28,12 +25,23 @@ const corsOptions = {
   credentials: true
 };
 
-connectDB();
-
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+// ❌ removed: app.options("*", cors(corsOptions));
+// cors() above already handles preflight OPTIONS requests for all routes.
+// The bare "*" wildcard crashes on newer path-to-regexp/Express versions.
 
 app.use(express.json());
+
+// Ensure DB is connected before handling each request (cached, so it only
+// actually connects once per warm container — see connectDB below)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({
@@ -52,8 +60,12 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Career Tracker API running on port ${PORT}`);
-});
+// ✅ only listen locally — Vercel imports `app` and handles requests itself
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Career Tracker API running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
