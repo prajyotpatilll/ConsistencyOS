@@ -12,7 +12,16 @@ const { notFound, errorHandler } = require("./middleware/error.middleware");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://consistency-os-weld.vercel.app",
+    "http://localhost:5173"
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
