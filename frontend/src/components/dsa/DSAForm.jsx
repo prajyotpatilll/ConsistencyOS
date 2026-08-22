@@ -8,7 +8,7 @@ const labelClass = "mb-1.5 block text-xs font-medium text-muted";
 const DSAForm = ({ initialData, onSubmit, onCancel, submitting }) => {
   const [form, setForm] = useState({
     problemName: initialData?.problemName || "",
-    platform: initialData?.platform || "LeetCode",
+    platform: initialData?.platform || "other",
     difficulty: initialData?.difficulty || "easy",
     dataStructure: initialData?.dataStructure || "",
     algorithm: initialData?.algorithm || "",
@@ -61,7 +61,7 @@ const DSAForm = ({ initialData, onSubmit, onCancel, submitting }) => {
             value={form.platform}
             onChange={handleChange("platform")}
           >
-            {["LeetCode", "GeeksForGeeks", "CodeChef", "Codeforces", "HackerRank", "Other"].map(
+            {["Other", "LeetCode", "GeeksForGeeks", "CodeChef", "Codeforces", "HackerRank"].map(
               (p) => (
                 <option key={p} value={p}>
                   {p}
@@ -142,7 +142,7 @@ const DSAForm = ({ initialData, onSubmit, onCancel, submitting }) => {
       </div>
 
       <div>
-        <label className={labelClass}>Notes</label>
+        <label className={labelClass}>Code</label>
         <textarea
           rows={2}
           className={inputClass}

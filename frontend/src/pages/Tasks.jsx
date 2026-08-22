@@ -11,12 +11,10 @@ import { useToast } from "../hooks/useToast";
 import taskService from "../services/task.service";
 
 const filters = [
-  { key: "all", label: "All" },
   { key: "today", label: "Today" },
   { key: "completed", label: "Completed" },
   { key: "pending", label: "Pending" },
 ];
-
 const isToday = (date) => {
   if (!date) return false;
   const d = new Date(date);
@@ -33,7 +31,7 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("today");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -56,14 +54,14 @@ const Tasks = () => {
   }, [loadTasks]);
 
   const filteredTasks = tasks.filter((task) => {
-    const isDone = task.completedToday ?? task.completed;
-    // A recurring task counts as "today" every day; a one-time task
-    // only counts when its dueDate is today.
-    if (filter === "today") return task.isRecurring || isToday(task.dueDate);
-    if (filter === "completed") return isDone;
-    if (filter === "pending") return !isDone;
-    return true;
-  });
+  const isDone = task.completedToday ?? task.completed;
+  const isTodayTask = task.isRecurring || isToday(task.dueDate);
+  // A recurring task counts as "today" every day; a one-time task
+  // only counts when its dueDate is today.
+  if (filter === "completed") return isDone && isTodayTask;
+  if (filter === "pending") return !isDone;
+  return isTodayTask; // "today"
+});
 
   const openAddModal = () => {
     setEditingTask(null);
